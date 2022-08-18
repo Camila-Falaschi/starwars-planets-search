@@ -1,0 +1,12 @@
+.table-sheets {
+  overflow-y: scroll;
+}
+
+.table-headers {
+  padding: 5px;
+  width: 80px;
+}
+
+.scroll {
+  overflow-x: scroll;
+}
