@@ -7,6 +7,10 @@ function PlanetsProvider({ children }) {
 
   const [planetsList, setPlanetsList] = useState([]);
   const [headersNames, setHeadersNames] = useState([]);
+  const [tableInfo, setTableInfo] = useState([]);
+  const [filters, setFilters] = useState({
+    filterByName: { name: '' },
+  });
 
   // para a constante 'planets' foi consultado o Stack Overflow (https://stackoverflow.com/questions/38750705/filter-object-properties-by-key-in-es6)
   async function getPlanetsInfo() {
@@ -20,15 +24,34 @@ function PlanetsProvider({ children }) {
       }), {}));
 
     setPlanetsList(planets);
+    setTableInfo(planets);
 
     const keysNames = Object.keys(planets[0]).map((name) => name.replace(/_/g, ' '));
     setHeadersNames(keysNames);
+  }
+
+  function onChangeTextInput({ target }) {
+    const { value } = target;
+
+    const filterName = planetsList.filter((element) => element.name
+      .toLowerCase().includes(value));
+
+    setTableInfo(filterName);
+    setFilters({
+      ...filters,
+      filterByName: {
+        name: value,
+      },
+    });
   }
 
   const contextValue = {
     planetsList,
     getPlanetsInfo,
     headersNames,
+    tableInfo,
+    onChangeTextInput,
+    filters,
   };
 
   return (

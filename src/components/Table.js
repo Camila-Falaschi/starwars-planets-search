@@ -3,7 +3,7 @@ import PlanetsContext from '../context/PlanetsContext';
 import './Table.css';
 
 function Table() {
-  const { planetsList, getPlanetsInfo, headersNames } = useContext(PlanetsContext);
+  const { tableInfo, getPlanetsInfo, headersNames } = useContext(PlanetsContext);
 
   useEffect(() => { getPlanetsInfo(); }, []);
 
@@ -18,7 +18,7 @@ function Table() {
         </tr>
       </thead>
       <tbody className="scroll">
-        {planetsList.map((item) => {
+        {tableInfo.map((item) => {
           const valuesArray = Object.values(item);
           return (
             <tr key={ valuesArray[0] }>
