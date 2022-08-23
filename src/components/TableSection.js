@@ -5,7 +5,8 @@ import Table from './Table';
 import './TableSection.css';
 
 function TableSection() {
-  const { onChangeTextInput } = useContext(PlanetsContext);
+  const { allfilters, onChangeTextInput } = useContext(PlanetsContext);
+  const { filterByName } = allfilters;
 
   return (
     <section className="table-section">
@@ -17,6 +18,7 @@ function TableSection() {
           id="search"
           name="search-input"
           placeholder="search planet name"
+          value={ filterByName.name }
           onChange={ (event) => onChangeTextInput(event) }
         />
       </label>

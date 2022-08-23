@@ -6,7 +6,13 @@
 }
 
 body {
-  align-items: center;
   display: flex;
   flex-flow: column;
+  height: 768px;
+  padding: 0 20px;
+  width: 1366px;
+}
+
+img {
+  width: 200px;
 }

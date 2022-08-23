@@ -3,5 +3,7 @@
 }
 
 .table-section {
-  width: 90%;
+  height: 600px;
+  overflow: scroll;
+  width: 1200px;
 }
