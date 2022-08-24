@@ -84,6 +84,9 @@ function PlanetsProvider({ children }) {
       filterByNumericValues: [...allfilters.filterByNumericValues,
         { ...filterNumericValues }],
     });
+
+    const newArray = columnSelect.filter((e) => e !== column);
+    setColumnSelect(newArray);
   }
 
   const contextValue = {
