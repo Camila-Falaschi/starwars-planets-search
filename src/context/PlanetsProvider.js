@@ -67,9 +67,7 @@ function PlanetsProvider({ children }) {
   function onClickFilters() {
     const { column, comparison, value } = filterNumericValues;
 
-    const filterList = planetsList.filter((item) => {
-      console.log(item[column]);
-
+    const filterList = tableInfo.filter((item) => {
       if (comparison === 'maior que') {
         return (Number(item[column]) > value && item[column] !== 'unknown');
       }
