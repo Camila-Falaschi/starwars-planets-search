@@ -18,7 +18,7 @@ function PlanetsProvider({ children }) {
   });
   const [filterNumericValues, setFilterNumericValues] = useState({
     column: columnSelect[0],
-    comparison: comparisonSelect[0],
+    comparison: 'maior que',
     value: '0',
   });
 
@@ -87,6 +87,18 @@ function PlanetsProvider({ children }) {
 
     const newArray = columnSelect.filter((e) => e !== column);
     setColumnSelect(newArray);
+
+    setFilterNumericValues({
+      column: newArray[0],
+      comparison: 'maior que',
+      value: '0',
+    });
+  }
+
+  function onClickDeleteFilter() {
+    // update 'allfilters: filterByNumericValues'
+    // filtrar 'planetList' com os filtros salvos em 'allfilters'
+    // update 'tableInfo'
   }
 
   const contextValue = {
@@ -103,6 +115,7 @@ function PlanetsProvider({ children }) {
     onChangeTextInput,
     onChangeFilterSelectors,
     onClickFilters,
+    onClickDeleteFilter,
   };
 
   return (
