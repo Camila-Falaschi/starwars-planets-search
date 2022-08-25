@@ -5,8 +5,9 @@ import Table from './Table';
 import './TableSection.css';
 
 function TableSection() {
-  const { allfilters, onChangeTextInput } = useContext(PlanetsContext);
-  const { filterByName } = allfilters;
+  const { allfilters, onChangeTextInput, deleteAllFilters,
+    onClickDeleteFilter } = useContext(PlanetsContext);
+  const { filterByName, filterByNumericValues } = allfilters;
 
   return (
     <section className="table-section">
@@ -23,6 +24,29 @@ function TableSection() {
         />
       </label>
       <Filters />
+      <button
+        type="button"
+        onClick={ () => deleteAllFilters() }
+        data-testid="button-remove-filters"
+      >
+        Remover Todos os Filtros
+      </button>
+      {
+        filterByNumericValues.map((item, index) => (
+          <div key={ index } data-testid="filter">
+            <p>
+              {`${item.column}  -  ${item.comparison}  -  ${item.value}`}
+            </p>
+            <button
+              type="button"
+              onClick={ (e) => onClickDeleteFilter(e) }
+              value={ index }
+            >
+              X
+            </button>
+          </div>
+        ))
+      }
       <Table />
     </section>
   );

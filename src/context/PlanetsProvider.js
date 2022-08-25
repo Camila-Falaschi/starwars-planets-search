@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import PlanetsContext from './PlanetsContext';
 
 function PlanetsProvider({ children }) {
@@ -95,10 +95,54 @@ function PlanetsProvider({ children }) {
     });
   }
 
-  function onClickDeleteFilter() {
-    // update 'allfilters: filterByNumericValues'
-    // filtrar 'planetList' com os filtros salvos em 'allfilters'
-    // update 'tableInfo'
+  function deleteAllFilters() {
+    setTableInfo(planetsList);
+    setAllFilters({
+      ...allfilters,
+      filterByNumericValues: [],
+    });
+    setColumnSelect(['population', 'orbital_period', 'diameter',
+      'rotation_period', 'surface_water']);
+  }
+
+  function onClickDeleteFilter({ target }) {
+    const { value: number } = target;
+    const { filterByNumericValues } = allfilters;
+
+    const arrayFilter = filterByNumericValues
+      .filter((obj, index) => index !== Number(number));
+
+    setAllFilters({
+      ...allfilters,
+      filterByNumericValues: arrayFilter,
+    });
+
+    if (arrayFilter.length === 0) {
+      return setTableInfo(planetsList);
+    }
+
+    const updateFilterList = arrayFilter.reduce((acc, currentItem) => {
+      let infoArray = acc;
+
+      if (acc.length === 0) {
+        infoArray = planetsList;
+      }
+
+      const newArrayOfPlanets = infoArray.filter((it) => {
+        const { column, comparison, value } = currentItem;
+        if (comparison === 'maior que') {
+          return (Number(it[column]) > value && it[column] !== 'unknown');
+        }
+        if (comparison === 'menor que') {
+          return (Number(it[column]) < value && it[column] !== 'unknown');
+        }
+        return (it[column] === String(value) && it[column] !== 'unknown');
+      });
+
+      return newArrayOfPlanets;
+    }, []);
+
+    setTableInfo(updateFilterList);
   }
 
   const contextValue = {
@@ -115,6 +159,7 @@ function PlanetsProvider({ children }) {
     onChangeTextInput,
     onChangeFilterSelectors,
     onClickFilters,
+    deleteAllFilters,
     onClickDeleteFilter,
   };
 
