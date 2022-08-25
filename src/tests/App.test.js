@@ -1,20 +1,15 @@
-import { render, screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import App from '../App';
-import PlanetsProvider from '../context/PlanetsProvider';
-import apiResponse from './mock';
+import apiResponse from './APImock';
+import renderWithContext from './renderWithContext';
 
 describe('The application', () => {
   it('should have a way to search the planet by typing and buttons to filter the table sheet.',
     () => {
-      global.fetch = jest.fn(async () => ({
-        json: async () => ({ results: apiResponse }),
-      }));
-
-      render(
-        <PlanetsProvider>
-          <App />
-        </PlanetsProvider>,
+      renderWithContext(
+        <App />,
       );
 
       const title = screen.getByText(/Projeto Star Wars - Trybe/i);
@@ -34,9 +29,70 @@ describe('The application', () => {
       const removeAllFilters = screen.getByTestId('button-remove-filters');
       expect(buttonFilter).toBeDefined();
       expect(removeAllFilters).toBeDefined();
-
-      // const planetTatooine = await screen.getByRole('cell', {name: 'Tatooine'});
-      expect(global.fetch).toHaveBeenCalled();
-      expect(global.fetch).toHaveBeenCalledWith('https://swapi-trybe.herokuapp.com/api/planets/');
     });
+  it('should show the table values', async () => {
+    jest.spyOn(global, 'fetch').mockResolvedValue({
+      json: jest.fn().mockResolvedValue(apiResponse),
+    });
+    renderWithContext(
+      <App />,
+    );
+
+    const four = 4;
+    const three = 3;
+
+    await waitFor(() => {
+      const columnFilter = screen.getByTestId('column-filter');
+      const comparisonFilter = screen.getByTestId('comparison-filter');
+      const numberFilter = screen.getByTestId('value-filter');
+      const buttonFilter = screen.getByTestId('button-filter');
+      const removeAllFilters = screen.getByTestId('button-remove-filters');
+
+      const searchBar = screen.getByTestId('name-filter');
+
+      const planetTatooine = screen.getByText('Tatooine');
+      expect(planetTatooine).toBeDefined();
+
+      userEvent.selectOptions(columnFilter, 'diameter');
+      userEvent.selectOptions(comparisonFilter, 'menor que');
+      userEvent.type(numberFilter, '10000');
+      userEvent.click(buttonFilter);
+
+      expect(planetTatooine).not.toBeInTheDocument();
+
+      const rows1stFilter = screen.getAllByRole('row');
+      expect(rows1stFilter.length).toBe(four);
+
+      const buttonXTestId = screen.getByTestId('filter');
+      expect(buttonXTestId).toBeDefined();
+
+      userEvent.click(removeAllFilters);
+
+      userEvent.type(searchBar, 'oo');
+      expect(screen.getByText('Naboo')).toBeDefined();
+
+      userEvent.selectOptions(columnFilter, 'diameter');
+      userEvent.selectOptions(comparisonFilter, 'menor que');
+      userEvent.type(numberFilter, '10000');
+      userEvent.click(buttonFilter);
+
+      userEvent.selectOptions(columnFilter, 'population');
+      userEvent.selectOptions(comparisonFilter, 'maior que');
+      userEvent.type(numberFilter, '0');
+      userEvent.click(buttonFilter);
+
+      const buttonX = screen.getAllByRole('button', { value: 'X' });
+
+      userEvent.click(buttonX[1]);
+      userEvent.click(buttonX[0]);
+
+      userEvent.selectOptions(columnFilter, 'population');
+      userEvent.selectOptions(comparisonFilter, 'igual a');
+      userEvent.type(numberFilter, '1000');
+      userEvent.click(buttonFilter);
+    });
+
+    expect(global.fetch).toHaveBeenCalled();
+    expect(global.fetch).toHaveBeenCalledWith('https://swapi-trybe.herokuapp.com/api/planets/');
+  });
 });

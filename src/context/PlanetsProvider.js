@@ -22,24 +22,6 @@ function PlanetsProvider({ children }) {
     value: '0',
   });
 
-  // para a constante 'planets' foi consultado o Stack Overflow (https://stackoverflow.com/questions/38750705/filter-object-properties-by-key-in-es6)
-  async function getPlanetsInfo() {
-    const response = await fetch('https://swapi-trybe.herokuapp.com/api/planets/');
-    const data = await response.json();
-    const planets = data.results.map((element) => Object.keys(element)
-      .filter((key) => key !== 'residents')
-      .reduce((acc, key) => ({
-        ...acc,
-        [key]: element[key],
-      }), {}));
-
-    setPlanetsList(planets);
-    setTableInfo(planets);
-
-    const keysNames = Object.keys(planets[0]).map((name) => name.replace(/_/g, ' '));
-    setHeadersNames(keysNames);
-  }
-
   function onChangeTextInput({ target }) {
     const { value } = target;
 
@@ -147,15 +129,17 @@ function PlanetsProvider({ children }) {
 
   const contextValue = {
     planetsList,
+    setPlanetsList,
     headersNames,
+    setHeadersNames,
     tableInfo,
+    setTableInfo,
     allfilters,
     filterNumericValues,
     columnSelect,
     setColumnSelect,
     comparisonSelect,
     setComparisonSelect,
-    getPlanetsInfo,
     onChangeTextInput,
     onChangeFilterSelectors,
     onClickFilters,
