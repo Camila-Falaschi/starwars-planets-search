@@ -1,9 +1,8 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 export default function CreateSelectTag(props) {
   const { name, testId, optionsArray,
-    // valueName,
     onChangeFunction } = props;
 
   return (
@@ -26,7 +25,6 @@ export default function CreateSelectTag(props) {
 CreateSelectTag.propTypes = {
   name: PropTypes.string.isRequired,
   testId: PropTypes.string.isRequired,
-  // valueName: PropTypes.string.isRequired,
   optionsArray: PropTypes.arrayOf(PropTypes.string).isRequired,
   onChangeFunction: PropTypes.func.isRequired,
 };
